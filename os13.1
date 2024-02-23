@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define FILENAME "employees.dat"
+
+// Structure to represent an employee
+struct Employee {
+    int id;
+    char name[50];
+    float salary;
+};
+
+// Function to add a new employee to the file
+void addEmployee() {
+    FILE *file = fopen(FILENAME, "ab"); // Open file in append binary mode
+
+    if (file == NULL) {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    struct Employee emp;
+
+    printf("Enter employee ID: ");
+    scanf("%d", &emp.id);
+
+    printf("Enter employee name: ");
+    scanf("%s", emp.name);
+
+    printf("Enter employee salary: ");
+    scanf("%f", &emp.salary);
+
+    fwrite(&emp, sizeof(struct Employee), 1, file);
+
+    fclose(file);
+}
+
+// Function to display details of a specific employee
+void displayEmployee(int id) {
+    FILE *file = fopen(FILENAME, "rb"); // Open file in read binary mode
+
+    if (file == NULL) {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    struct Employee emp;
+
+    // Move file pointer to the desired record
+    fseek(file, (id - 1) * sizeof(struct Employee), SEEK_SET);
+
+    fread(&emp, sizeof(struct Employee), 1, file);
+
+    printf("ID: %d\n", emp.id);
+    printf("Name:
