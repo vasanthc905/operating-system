@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+int main() {
+    int fd;
+    char buffer[100];
+
+    // Create a file
+    fd = creat("example.txt", 0644);
+    if (fd == -1) {
+        perror("Failed to create file");
+        exit(EXIT_FAILURE);
+    }
+    printf("File created successfully.\n");
+    close(fd);
+
+    // Open the file for writing
+    fd = open("example.txt", O_WRONLY);
+    if (fd == -1) {
+        perror("Failed to open file for writing");
+        exit(EXIT_FAILURE);
+    }
+
+    // Write to the file
+    if (write(fd, "Hello, World!\n", 14) == -1) {
+        perror("Failed to write to file");
+        exit(EXIT_FAILURE);
+    }
+    printf("Data written to file successfully.\n");
+    close(fd);
+
+    // Open the file for reading
+    fd = open("example.txt", O_RDONLY);
+    if (fd == -1) {
+        perror("Failed to open file for reading");
+        exit(EXIT_FAILURE);
+    }
+
+    // Read from the file
+    if (read(fd, buffer, sizeof(buffer)) == -1) {
+        perror("Failed to read from file");
+        exit(EXIT_FAILURE);
+    }
+    printf("Data read from file: %s", buffer);
+    close(fd);
+
+    // Delete the file
+    if (unlink("example.txt") == -1) {
+        perror("Failed to delete file");
+        exit(EXIT_FAILURE);
+    }
+    printf("File deleted successfully.\n");
+
+    return 0;
+}
