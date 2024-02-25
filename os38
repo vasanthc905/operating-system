@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 100
+
+// Function to sort the requests in ascending order
+void sortRequests(int requests[], int n) {
+    // Using bubble sort for simplicity
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (requests[j] > requests[j + 1]) {
+                // Swap requests
+                int temp = requests[j];
+                requests[j] = requests[j + 1];
+                requests[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// Function to simulate SCAN disk scheduling algorithm
+void scan(int requests[], int n, int head, int direction, int diskSize) {
+    int totalSeekTime = 0;
+    int currentIndex;
+
+    // Sort the requests in ascending order
+    sortRequests(requests, n);
+
+    // Find the index of the request closest to the head position
+    for (currentIndex = 0; currentIndex < n; currentIndex++) {
+        if (requests[currentIndex] >= head) {
+            break;
+        }
+    }
+
+    printf("Sequence of serving requests:\n");
+    printf("%d", head);
+
+    // Serve requests in the appropriate direction
+    if (direction == 1) { // Moving towards higher sectors
+        // Serve requests in the higher sectors first
+        for (int i = currentIndex; i < n; i++) {
+            totalSeekTime += abs(head - requests[i]);
+            head = requests[i];
+            printf(" -> %d", head);
+        }
+        // Then serve requests in the lower sectors
+        for (int i = currentIndex - 1; i >= 0; i--) {
+            totalSeekTime += abs(head - requests[i]);
+            head = requests[i];
+            printf(" -> %d", head);
+        }
+    } else { // Moving towards lower sectors
+        // Serve requests in the lower sectors first
+        for (int i = currentIndex - 1; i >= 0; i--) {
+            totalSeekTime += abs(head - requests[i]);
+            head = requests[i];
+            printf(" -> %d", head);
+        }
+        // Then serve requests in the higher sectors
+        for (int i = currentIndex; i < n; i++) {
+            totalSeekTime += abs(head - requests[i]);
+            head = requests[i];
+            printf(" -> %d", head);
+        }
+    }
+
+    // Display total seek time
+    printf("\nTotal seek time: %d\n", totalSeekTime);
+}
+
+int main() {
+    int requests[MAX_REQUESTS];
+    int n, head, direction, diskSize;
+
+    // Input the number of requests
+    printf("Enter the number of requests: ");
+    scanf("%d", &n);
+
+    // Input the requests
+    printf("Enter the requests: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    // Input the initial position of the head
+    printf("Enter the initial position of the head: ");
+    scanf("%d", &head);
+
+    // Input the direction of movement (1 for towards higher sectors, 0 for towards lower sectors)
+    printf("Enter the direction of movement (1 for towards higher sectors, 0 for towards lower sectors): ");
+    scanf("%d", &direction);
+
+    // Input the disk size
+    printf("Enter the disk size: ");
+    scanf("%d", &diskSize);
+
+    // Simulate SCAN disk scheduling
+    scan(requests, n, head, direction, diskSize);
+
+    return 0;
+}
