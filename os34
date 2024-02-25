@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_RECORD_SIZE 100 // Maximum size of each record in bytes
+
+int main() {
+    FILE *file;
+    char record[MAX_RECORD_SIZE];
+    int recordNumber = 1; // Starting record number
+
+    // Open the file for reading
+    file = fopen("file.txt", "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    // Read and print each record from the file
+    while (fgets(record, MAX_RECORD_SIZE, file) != NULL) {
+        printf("Record %d: %s", recordNumber++, record);
+    }
+
+    // Close the file
+    fclose(file);
+
+    return 0;
+}
