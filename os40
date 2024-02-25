@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <sys/stat.h>
+
+void printPermissions(mode_t mode) {
+    printf("Permissions: ");
+    printf((mode & S_IRUSR) ? "r" : "-");
+    printf((mode & S_IWUSR) ? "w" : "-");
+    printf((mode & S_IXUSR) ? "x" : "-");
+    printf((mode & S_IRGRP) ? "r" : "-");
+    printf((mode & S_IWGRP) ? "w" : "-");
+    printf((mode & S_IXGRP) ? "x" : "-");
+    printf((mode & S_IROTH) ? "r" : "-");
+    printf((mode & S_IWOTH) ? "w" : "-");
+    printf((mode & S_IXOTH) ? "x" : "-");
+    printf("\n");
+}
+
+int main() {
+    struct stat fileStat;
+
+    // Replace "example.txt" with the path to your file
+    if (stat("example.txt", &fileStat) == -1) {
+        perror("Error");
+        return 1;
+    }
+
+    printf("File Permissions:\n");
+    printPermissions(fileStat.st_mode);
+
+    return 0;
+}
