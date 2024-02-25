@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define BLOCK_SIZE 100  // Size of each block in bytes
+#define MAX_BLOCKS 10   // Maximum number of blocks in the file
+
+// Structure to represent a disk block
+typedef struct DiskBlock {
+    char data[BLOCK_SIZE];
+    int nextBlock;  // Pointer to the next block in the file (-1 if last block)
+} DiskBlock;
+
+// Function to simulate reading a block from disk
+void readBlock(int blockNumber, DiskBlock *block) {
+    // Simulated reading from disk (placeholder)
+    printf("Reading block %d from disk\n", blockNumber);
+    // In a real system, this function would read data from disk into 'block'
+}
+
+int main() {
+    DiskBlock blocks[MAX_BLOCKS];
+    int firstBlock = 0; // Pointer to the first block of the file
+    int lastBlock = -1; // Pointer to the last block of the file
+
+    // Initialize disk blocks
+    for (int i = 0; i < MAX_BLOCKS; i++) {
+        blocks[i].nextBlock = -1; // Initialize nextBlock pointers to -1
+    }
+
+    // Simulate file allocation
+    for (int i = 0; i < MAX_BLOCKS; i++) {
+        readBlock(i, &blocks[i]);
+    }
+
+    // Print the contents of each block in the file
+    int currentBlock = firstBlock;
+    int blockNumber = 0;
+    while (currentBlock != -1) {
+        printf("Block %d: %s\n", blockNumber++, blocks[currentBlock].data);
+        currentBlock = blocks[currentBlock].nextBlock;
+    }
+
+    return 0;
+}
