@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 100
+#define MAX_TRACKS 1000
+
+// Function to simulate C-SCAN disk scheduling algorithm
+void cscan(int requests[], int n, int head, int maxTrack) {
+    int totalSeekTime = 0;
+    int visited[MAX_TRACKS] = {0};
+
+    // Sort requests in ascending order
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (requests[j] > requests[j + 1]) {
+                int temp = requests[j];
+                requests[j] = requests[j + 1];
+                requests[j + 1] = temp;
+            }
+        }
+    }
+
+    // Find the index of the current head position
+    int i;
+    for (i = 0; i < n; i++) {
+        if (requests[i] >= head) {
+            break;
+        }
+    }
+
+    // Scan right
+    printf("Sequence of serving requests:\n");
+    for (int j = i; j < n; j++) {
+        printf("%d -> ", requests[j]);
+        totalSeekTime += abs(requests[j] - head);
+        head = requests[j];
+    }
+
+    // If head is not at the end, move it to the beginning
+    if (i != n) {
+        printf("%d -> ", maxTrack - 1);
+        totalSeekTime += maxTrack - 1 - head;
+        head = maxTrack - 1;
+    }
+
+    // Scan left
+    for (int j = 0; j < i; j++) {
+        printf("%d -> ", requests[j]);
+        totalSeekTime += abs(requests[j] - head);
+        head = requests[j];
+    }
+
+    printf("\nTotal seek time: %d\n", totalSeekTime);
+}
+
+int main() {
+    int requests[MAX_REQUESTS];
+    int n, head, maxTrack;
+
+    // Input the number of requests
+    printf("Enter the number of requests: ");
+    scanf("%d", &n);
+
+    // Input the requests
+    printf("Enter the requests: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    // Input the initial position of the head
+    printf("Enter the initial position of the head: ");
+    scanf("%d", &head);
+
+    // Input the maximum track of the disk
+    printf("Enter the maximum track of the disk: ");
+    scanf("%d", &maxTrack);
+
+    // Simulate C-SCAN disk scheduling
+    cscan(requests, n, head, maxTrack);
+
+    return 0;
+}
