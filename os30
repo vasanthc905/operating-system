@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <pthread.h>
+
+void *thread_function(void *arg) {
+    printf("This is a new thread.\n");
+    pthread_exit(NULL);
+}
+
+int main() {
+    pthread_t thread_id;
+    printf("Creating a new thread...\n");
+    pthread_create(&thread_id, NULL, thread_function, NULL);
+    printf("Exiting from the new thread.\n");
+    pthread_exit(NULL);
+    printf("This line will not be reached.\n");
+    return 0;
+}
+#include <stdio.h>
+#include <pthread.h>
+
+void *thread_function(void *arg) {
+    printf("This is a new thread.\n");
+    pthread_exit(NULL);
+}
+
+int main() {
+    pthread_t thread_id1, thread_id2;
+    printf("Creating two threads...\n");
+    pthread_create(&thread_id1, NULL, thread_function, NULL);
+    pthread_create(&thread_id2, NULL, thread_function, NULL);
+
+    if (pthread_equal(thread_id1, thread_id2)) {
+        printf("Thread IDs are equal.\n");
+    } else {
+        printf("Thread IDs are not equal.\n");
+    }
+
+    pthread_join(thread_id1, NULL);
+    pthread_join(thread_id2, NULL);
+
+    printf("Main thread exiting.\n");
+    return 0;
+}
+#include <stdio.h>
+#include <pthread.h>
+
+void *thread_function(void *arg) {
+    printf("This is a new thread.\n");
+    pthread_exit(NULL);
+}
+
+int main() {
+    pthread_t thread_id;
+    printf("Creating a new thread...\n");
+    pthread_create(&thread_id, NULL, thread_function, NULL);
+    pthread_join(thread_id, NULL);
+    printf("Main thread exiting.\n");
+    return 0;
+}
