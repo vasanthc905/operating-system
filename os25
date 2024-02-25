@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+int main() {
+    // File descriptors
+    int fd_input, fd_output;
+    
+    // Open a file for reading
+    fd_input = open("input.txt", O_RDONLY);
+    if (fd_input == -1) {
+        perror("Error opening input.txt");
+        exit(EXIT_FAILURE);
+    }
+    
+    // Open or create a file for writing, with read and write permissions for owner
+    fd_output = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    if (fd_output == -1) {
+        perror("Error opening output.txt");
+        exit(EXIT_FAILURE);
+    }
+    
+    // Read from input file and write to output file
+    char buffer[BUFSIZ];
+    ssize_t bytes_read, bytes_written;
+    while ((bytes_read = read(fd_input, buffer, BUFSIZ)) > 0) {
+        bytes_written = write(fd_output, buffer, bytes_read);
+        if (bytes_written != bytes_read) {
+            perror("Error writing to output.txt");
+            exit(EXIT_FAILURE);
+        }
+    }
+    
+    // Close files
+    if (close(fd_input) == -1) {
+        perror("Error closing input.txt");
+        exit(EXIT_FAILURE);
+    }
+    if (close(fd_output) == -1) {
+        perror("Error closing output.txt");
+        exit(EXIT_FAILURE);
+    }
+    
+    printf("File copied successfully.\n");
+    
+    return 0;
+}
