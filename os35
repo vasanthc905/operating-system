@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define BLOCK_SIZE 100  // Size of each block in bytes
+#define MAX_BLOCKS 10   // Maximum number of blocks in the file
+
+int main() {
+    FILE *file;
+    int indexBlock[MAX_BLOCKS]; // Index block to store pointers to file blocks
+    char block[BLOCK_SIZE];
+    int blockNumber = 0; // Starting block number
+
+    // Initialize index block with block numbers
+    for (int i = 0; i < MAX_BLOCKS; i++) {
+        indexBlock[i] = i + 1; // Assuming block numbers start from 1
+    }
+    indexBlock[MAX_BLOCKS - 1] = -1; // Mark the last entry as -1 to indicate end of file
+
+    // Open the file for reading
+    file = fopen("file.txt", "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    // Read and print each block of the file using the index block
+    int currentBlock = 0;
+    while (currentBlock != -1) {
+        fseek(file, currentBlock * BLOCK_SIZE, SEEK_SET); // Move file pointer to the current block
+        fread(block, sizeof(char), BLOCK_SIZE, file);    // Read the block
+        printf("Block %d: %s\n", blockNumber++, block);
+        currentBlock = indexBlock[currentBlock];          // Move to the next block using index block
+    }
+
+    // Close the file
+    fclose(file);
+
+    return 0;
+}
