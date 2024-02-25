@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define MAX_FRAMES 3
+
+void LRU(int pages[], int n, int capacity) {
+    int frame[MAX_FRAMES];
+    int frameCount = 0;
+    int pageFaults = 0;
+    int lastUsed[MAX_FRAMES];
+
+    for (int i = 0; i < MAX_FRAMES; i++) {
+        frame[i] = -1; // Initializing frames with an invalid page number
+        lastUsed[i] = INT_MAX; // Initializing last used time with maximum value
+    }
+
+    for (int i = 0; i < n; i++) {
+        int page = pages[i];
+        int found = 0;
+        for (int j = 0; j < frameCount; j++) {
+            if (frame[j] == page) {
+                found = 1;
+                lastUsed[j] = i;
+                break;
+            }
+        }
+
+        if (!found) {
+            int leastUsedIndex = 0;
+            for (int j = 1; j < frameCount; j++) {
+                if (lastUsed[j] < lastUsed[leastUsedIndex]) {
+                    leastUsedIndex = j;
+                }
+            }
+            frame[leastUsedIndex] = page;
+            lastUsed[leastUsedIndex] = i;
+            if (frameCount < capacity) {
+                frameCount++;
+            }
+            pageFaults++;
+        }
+
+        printf("Page %d -> ", page);
+        for (int j = 0; j < frameCount; j++) {
+            printf("%d ", frame[j]);
+        }
+        printf("\n");
+    }
+    printf("Total page faults: %d\n", pageFaults);
+}
+
+int main() {
+    int pages[] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2};
+    int n = sizeof(pages) / sizeof(pages[0]);
+    int capacity = MAX_FRAMES;
+
+    printf("Page reference sequence: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", pages[i]);
+    }
+    printf("\n\n");
+
+    printf("Simulation using LRU:\n");
+    LRU(pages, n, capacity);
+
+    return 0;
+}
