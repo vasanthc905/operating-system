@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 100
+
+// Function to simulate FCFS disk scheduling algorithm
+void fcfs(int requests[], int n, int head) {
+    int totalSeekTime = 0;
+
+    printf("Sequence of serving requests:\n");
+    printf("%d", head);
+
+    // Calculate seek time for each request
+    for (int i = 0; i < n; i++) {
+        totalSeekTime += abs(head - requests[i]);
+        head = requests[i];
+        printf(" -> %d", head);
+    }
+
+    // Display total seek time
+    printf("\nTotal seek time: %d\n", totalSeekTime);
+}
+
+int main() {
+    int requests[MAX_REQUESTS];
+    int n, head;
+
+    // Input the number of requests
+    printf("Enter the number of requests: ");
+    scanf("%d", &n);
+
+    // Input the requests
+    printf("Enter the requests: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    // Input the initial position of the head
+    printf("Enter the initial position of the head: ");
+    scanf("%d", &head);
+
+    // Simulate FCFS disk scheduling
+    fcfs(requests, n, head);
+
+    return 0;
+}
